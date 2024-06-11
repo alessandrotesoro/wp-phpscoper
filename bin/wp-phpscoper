@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+// Used when running the wp-phpscoper command from composer.
+$vendorPath = dirname(__DIR__, 4) . '/vendor/autoload.php';
+
+// Used for local development.
+$localPath = dirname(__DIR__) . '/vendor/autoload.php';
+
+if (file_exists($vendorPath)) {
+    require_once $vendorPath;
+    $autoloadPath = $vendorPath;
+} else {
+    require_once $localPath;
+    $autoloadPath = $localPath;
+}
+
+$rootPath = dirname($autoloadPath, 2);
+
+use Sematico\Scoper\Console\Command\ExclusionsCommand;
+use Sematico\Scoper\Console\Command\SetupCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application( 'WP PHP-Scoper', '1.0.0' );
+$application->add( new ExclusionsCommand() );
+$application->add( new SetupCommand() );
+
+$application->run();
